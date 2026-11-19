@@ -9,7 +9,15 @@ OUT = "profile"
 os.makedirs(OUT, exist_ok=True)
 
 def get_json(url):
-    req = urllib.request.Request(url, headers={"User-Agent": "aderox20-profile-stats"})
+    headers = {
+        "User-Agent": "aderox20-profile-stats",
+        "Accept": "application/vnd.github+json",
+    }
+    token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+
+    req = urllib.request.Request(url, headers=headers)
     with urllib.request.urlopen(req, timeout=20) as r:
         return json.load(r)
 
